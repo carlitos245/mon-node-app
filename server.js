@@ -1,43 +1,61 @@
-//Code pour le Back-End
 // Importer les modules nécessaires
-const express = require('express');       // Framework pour gérer les requêtes HTTP
-const http = require('http');             // Module HTTP pour créer le serveur
-const { Server } = require('socket.io');  // Socket.io pour la communication en temps réel
+const express = require('express');
+const http = require('http');
+const { Server } = require('socket.io');
+const sanitizeHtml = require('sanitize-html');
+const rateLimit = require('express-rate-limit');
 
 // Initialiser une application Express
 const app = express();
-const server = http.createServer(app); // Créer un serveur HTTP
-const io = new Server(server);         // Lier le serveur à Socket.io
+const server = http.createServer(app);
+const io = new Server(server);
 
-// Servir les fichiers statiques (HTML, CSS, JS) depuis le dossier "public"
+// Ajout de la Politique de Sécurité de Contenu (CSP)
+app.use((req, res, next) => {
+    res.setHeader(
+        'Content-Security-Policy',
+        "default-src 'self'; script-src 'self'; style-src 'self'"
+    );
+    next();
+});
+
+// Limitation des requêtes (Rate Limiting)
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 100,
+    message: 'Trop de requêtes, essayez plus tard.'
+});
+app.use(limiter);
+
+// Servir les fichiers statiques depuis le dossier "public"
 app.use(express.static('public'));
 
-// Gestion des événements Socket.io
+// Gestion des événements Socket.IO
 io.on('connection', (socket) => {
     console.log('Un utilisateur est connecté.');
 
-    // Écouter l'événement "user connected" pour enregistrer un nouvel utilisateur
     socket.on('user connected', (data) => {
-        console.log(`Utilisateur connecté : ${data.pseudo}, Email : ${data.email}`);
-        // Diffuser l'événement à tous les autres utilisateurs
-        socket.broadcast.emit('user connected', data);
+        const pseudo = data.pseudo;
+        const email = data.email;
+
+        console.log(`Utilisateur identifié : ${pseudo}, Email : ${email}`);
+
+        // Diffuser uniquement le pseudo aux autres utilisateurs
+        socket.broadcast.emit('user connected', { pseudo });
     });
 
-    // Écouter les messages de chat
     socket.on('chat message', (msg) => {
-        console.log(`Message reçu : ${msg}`);
-        // Diffuser le message à tous les utilisateurs
+        console.log("Message reçu :", msg);
         io.emit('chat message', msg);
     });
 
-    // Gérer la déconnexion d'un utilisateur
     socket.on('disconnect', () => {
         console.log('Un utilisateur a quitté le chat.');
     });
 });
 
-// Lancer le serveur sur le port 3000
-const PORT = 3000;// Change le port à 4000
+// Lancer le serveur
+const PORT = 3000;
 server.listen(PORT, () => {
     console.log(`Serveur en ligne sur http://localhost:${PORT}`);
 });
