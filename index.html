@@ -1,44 +1,28 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <!-- Encodage du fichier pour supporter les caractères spéciaux -->
     <meta charset="UTF-8">
-    <!-- Assure que le contenu est adapté aux appareils mobiles -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Application de Chat en Temps Réel</title>
-    <!-- Lien vers votre fichier CSS pour le design -->
+    <title>Chat en Temps Réel</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Script de Socket.io pour la communication en temps réel -->
     <script src="/socket.io/socket.io.js"></script>
-    <!-- Lien vers votre fichier JavaScript pour les fonctionnalités -->
-    <script src="app.js"></script>
+    <script src="app.js" defer></script>
 </head>
 <body>
-    <!-- En-tête avec le titre principal -->
     <header>
-        <h1>Bienvenue dans le Chat Social</h1>
+        <h1>Bienvenue dans le Chat</h1>
     </header>
-    <!-- Section principale contenant la connexion et le chat -->
     <main>
-        <!-- Section de Connexion : Cette section sera visible par défaut -->
         <section id="login-section">
             <h2>Connexion</h2>
-            <!-- Champ pour entrer un pseudo -->
-            <input type="text" placeholder="Entrez votre pseudo" id="pseudo">
-            <!-- Champ pour entrer un email -->
-            <input type="email" placeholder="Entrez votre email" id="email">
-            <!-- Bouton pour se connecter -->
+            <input type="text" id="pseudo" placeholder="Entrez votre pseudo"><br><br>
+            <input type="email" id="email" placeholder="Entrez votre email"><br><br>
             <button onclick="connectUser()">Se connecter</button>
         </section>
-
-        <!-- Section de Chat : Cette section sera cachée jusqu'à connexion -->
         <section id="chat-section" style="display: none;">
             <h2>Zone de Chat</h2>
-            <!-- Zone pour afficher les messages -->
             <div id="message-list"></div>
-            <!-- Champ pour saisir un message -->
-            <input type="text" placeholder="Écrivez votre message ici..." id="message-input">
-            <!-- Bouton pour envoyer un message -->
+            <input type="text" id="message-input" placeholder="Écrivez un message...">
             <button onclick="sendMessage()">Envoyer</button>
         </section>
     </main>
