@@ -1,16 +1,19 @@
 {
-  "name": "carlo",
+  "name": "mon-node-app",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
   "dependencies": {
-    "pdfjs-dist": "^5.0.375"
+    "express": "^4.18.2",
+    "socket.io": "^4.8.1",
+    "sanitize-html": "^2.15.0",
+    "express-rate-limit": "^7.5.0"
   },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["chat", "real-time", "nodejs", "socket.io"],
+  "author": "Carlos",
   "license": "ISC",
-  "description": ""
+  "description": "Une application de chat en temps réel avec Node.js et Socket.IO."
 }
